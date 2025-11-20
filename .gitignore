@@ -27,8 +27,7 @@ wheels/
 .env
 .env.local
 
-# FAISS index (will be generated locally)
-faiss_index/
+# FAISS index - committed to Git for deployment
 
 # IDE
 .vscode/
