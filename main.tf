@@ -64,6 +64,7 @@ resource "aws_iam_policy" "github_actions_policy" {
           "apprunner:StartDeployment",
           "apprunner:DescribeService",
           "apprunner:UpdateService",
+          "apprunner:DeleteService",
           "apprunner:ListOperations"
         ],
         Resource = "*"
