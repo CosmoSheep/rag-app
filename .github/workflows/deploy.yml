@@ -1,0 +1,85 @@
+name: Deploy to AWS App Runner
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Generate FAISS index
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python ingest.py
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "IMAGE_URI=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: Get App Runner IAM roles
+        id: get-roles
+        run: |
+          # 从 App Runner 服务获取 access role 和 instance role
+          ACCESS_ROLE=$(aws apprunner describe-service \
+            --service-arn ${{ secrets.APP_RUNNER_ARN }} \
+            --query 'Service.SourceConfiguration.AuthenticationConfiguration.AccessRoleArn' \
+            --output text)
+          
+          INSTANCE_ROLE=$(aws apprunner describe-service \
+            --service-arn ${{ secrets.APP_RUNNER_ARN }} \
+            --query 'Service.InstanceConfiguration.InstanceRoleArn' \
+            --output text)
+          
+          echo "access-role=$ACCESS_ROLE" >> $GITHUB_OUTPUT
+          echo "instance-role=$INSTANCE_ROLE" >> $GITHUB_OUTPUT
+
+      - name: Deploy to App Runner
+        uses: awslabs/amazon-app-runner-deploy@main
+        with:
+          service: ${{ secrets.APP_RUNNER_ARN }}
+          image: ${{ env.IMAGE_URI }}
+          access-role-arn: ${{ steps.get-roles.outputs.access-role }}
+          region: ${{ secrets.AWS_REGION }}
+          cpu: 1
+          memory: 2
+          port: 8000
+          wait-for-service-stability-seconds: 600
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
