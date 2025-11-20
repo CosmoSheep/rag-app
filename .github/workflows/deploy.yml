@@ -56,13 +56,17 @@ jobs:
             --query 'Service.InstanceConfiguration.InstanceRoleArn' \
             --output text)
           
+          # 从 ARN 中提取服务名称
+          SERVICE_NAME=$(echo "${{ secrets.APP_RUNNER_ARN }}" | cut -d'/' -f2)
+          
           echo "access-role=$ACCESS_ROLE" >> $GITHUB_OUTPUT
           echo "instance-role=$INSTANCE_ROLE" >> $GITHUB_OUTPUT
+          echo "service-name=$SERVICE_NAME" >> $GITHUB_OUTPUT
 
       - name: Deploy to App Runner
         uses: awslabs/amazon-app-runner-deploy@main
         with:
-          service: ${{ secrets.APP_RUNNER_ARN }}
+          service: ${{ steps.get-roles.outputs.service-name }}
           image: ${{ env.IMAGE_URI }}
           access-role-arn: ${{ steps.get-roles.outputs.access-role }}
           region: ${{ secrets.AWS_REGION }}
