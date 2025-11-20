@@ -327,7 +327,7 @@ docker stop test && docker rm test
 # 7. 提交并推送代码（触发 GitHub Actions 自动部署）
 git add .
 git commit -m "Update: feature description"
-git push origin main
+git push origin master
 ```
 
 ### 2. 使用 Docker Compose（可选）
@@ -443,7 +443,7 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
 1. 本地修改代码
 2. 本地构建和测试（本指南）
 3. 确认功能正常后提交代码
-4. 推送到 GitHub
+4. 推送到 GitHub（master 分支）
 5. GitHub Actions 自动部署到生产环境
 
 **这样可以确保推送的代码已经过本地验证，减少生产环境出错的可能。**

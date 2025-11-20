@@ -31,8 +31,8 @@ cd /Users/heyang/Documents/Repos/rag-app
 git add .
 git commit -m "Setup complete: ready for deployment"
 
-# 推送到 main 分支触发自动部署
-git push origin main
+# 推送到 master 分支触发自动部署
+git push origin master
 ```
 
 ---
@@ -61,7 +61,7 @@ git push origin main
 ## 🎉 完成！
 
 完成以上 3 个步骤后，您的 RAG 应用就会：
-- ✅ 每次推送代码到 main 分支自动部署
+- ✅ 每次推送代码到 master 分支自动部署
 - ✅ 自动构建 Docker 镜像
 - ✅ 自动推送到 ECR
 - ✅ 自动更新 App Runner 服务

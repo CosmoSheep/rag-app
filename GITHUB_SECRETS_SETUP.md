@@ -60,8 +60,8 @@ git add .
 # 提交
 git commit -m "Initial commit: RAG app with CI/CD setup"
 
-# 推送到 main 分支
-git push -u origin main
+# 推送到 master 分支
+git push -u origin master
 ```
 
 ### 步骤 2: 验证 CI/CD 流程

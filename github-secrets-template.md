@@ -73,11 +73,11 @@ Secret 名称: AWS_IAM_ROLE_TO_ASSUME
 
 ## 测试自动部署
 
-1. 推送代码到 main 分支：
+1. 推送代码到 master 分支：
 ```bash
 git add .
 git commit -m "Test deployment"
-git push origin main
+git push origin master
 ```
 
 2. 查看 GitHub Actions 工作流：
@@ -104,7 +104,7 @@ https://github.com/CosmoSheep/rag-app/actions
 
 **解决方案:**
 - 确认 GitHub 仓库名称正确: `CosmoSheep/rag-app`
-- 确认只在 main 分支触发
+- 确认只在 master 分支触发
 - 检查 IAM Role 的信任策略是否正确
 
 ### Q: ECR 推送失败

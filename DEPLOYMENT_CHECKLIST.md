@@ -71,8 +71,8 @@ git branch
 git add .
 git commit -m "Test deployment workflow"
 
-# 推送到 main 分支
-git push origin main
+# 推送到 master 分支
+git push origin master
 ```
 
 ### 3.2 监控部署过程
