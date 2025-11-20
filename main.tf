@@ -103,7 +103,7 @@ resource "aws_iam_policy" "github_actions_policy" {
 resource "aws_iam_role" "github_actions_role" {
   name = "github-actions-deploy-role"
 
-  # 信任策略：只允许来自您特定仓库的 main 分支的请求
+  # 信任策略：只允许来自您特定仓库的 master 分支的请求
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -115,7 +115,7 @@ resource "aws_iam_role" "github_actions_role" {
         Action = "sts:AssumeRoleWithWebIdentity",
         Condition = {
           StringEquals = {
-            "token.actions.githubusercontent.com:sub" : "repo:${var.github_org_or_user}/${var.github_repo_name}:ref:refs/heads/main"
+            "token.actions.githubusercontent.com:sub" : "repo:${var.github_org_or_user}/${var.github_repo_name}:ref:refs/heads/master"
           }
         }
       }

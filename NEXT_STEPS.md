@@ -10,11 +10,12 @@
 
 访问：`https://github.com/CosmoSheep/rag-app/settings/secrets/actions`
 
-点击 "New repository secret" 依次添加以下 5 个 secrets：
+点击 "New repository secret" 依次添加以下 4 个 secrets：
+
+**注意：** OPENAI_API_KEY 不需要配置在 GitHub Secrets 中，因为 FAISS 索引已经预先生成并提交到 Git。
 
 | Secret 名称 | 值 |
 |------------|---|
-| `OPENAI_API_KEY` | `sk-proj-...`（您的 OpenAI API Key）|
 | `AWS_REGION` | `us-east-1` |
 | `ECR_REPOSITORY` | `bee-edu-rag-app` |
 | `APP_RUNNER_ARN` | `arn:aws:apprunner:us-east-1:924030134232:service/rag-app/9ea667871d30400ea99b286d734103b4` |
