@@ -69,6 +69,9 @@ jobs:
           service: ${{ steps.get-roles.outputs.service-name }}
           image: ${{ env.IMAGE_URI }}
           access-role-arn: ${{ steps.get-roles.outputs.access-role }}
+          instance-role-arn: ${{ steps.get-roles.outputs.instance-role }}
+          runtime-environment-secrets: |
+            OPENAI_API_KEY=arn:aws:secretsmanager:us-east-1:924030134232:secret:bee-edu-openai-key-secret-rZlJ96
           region: ${{ secrets.AWS_REGION }}
           cpu: 1
           memory: 2
